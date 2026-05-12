@@ -163,9 +163,61 @@
     letter-spacing: 0.3px;
   }
 
+  /* Reject screen - shown when user clicks "NO" */
+  .reject-screen {
+    display: none;
+    animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reject-screen.active {
+    display: block;
+  }
+
+  .reject-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 24px;
+    background: rgba(230, 18, 107, 0.15);
+    border: 2px solid var(--durex-pink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+  }
+
+  .reject-screen h2 {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+
+  .reject-screen .message {
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.85;
+    margin-bottom: 14px;
+  }
+
+  .reject-screen .signature {
+    font-size: 13px;
+    opacity: 0.6;
+    margin-top: 24px;
+    font-style: italic;
+    letter-spacing: 0.3px;
+  }
+
+  .reject-screen .heart {
+    color: var(--durex-pink);
+    font-size: 16px;
+  }
+
   @media (max-width: 480px) {
     .card { padding: 36px 24px 28px; }
     h1 { font-size: 24px; }
+    .reject-screen h2 { font-size: 22px; }
     .logo { font-size: 24px; padding: 6px 22px; }
   }
 </style>
@@ -173,18 +225,37 @@
 <body>
 
   <div class="card">
-    <div class="logo">durex</div>
-    <h1>Are you 18 or older?</h1>
-    <p>This content is intended for adults only. Please confirm your age to continue.</p>
 
-    <div class="buttons">
-      <button class="yes" onclick="confirmAge()">YES — I am 18+</button>
-      <button class="no" onclick="rejectAge()">NO — I am under 18</button>
+    <!-- Age verification screen -->
+    <div class="age-screen" id="ageScreen">
+      <div class="logo">durex</div>
+      <h1>Are you 18 or older?</h1>
+      <p>This content is intended for adults only. Please confirm your age to continue.</p>
+
+      <div class="buttons">
+        <button class="yes" onclick="confirmAge()">YES — I am 18+</button>
+        <button class="no" onclick="rejectAge()">NO — I am under 18</button>
+      </div>
+
+      <div class="disclaimer">
+        By clicking "Yes" you confirm you are of legal age to view adult content in your region.
+      </div>
     </div>
 
-    <div class="disclaimer">
-      By clicking "Yes" you confirm you are of legal age to view adult content in your region.
+    <!-- Reject screen - shown when user clicks "NO" -->
+    <div class="reject-screen" id="rejectScreen">
+      <div class="logo">durex</div>
+      <div class="reject-icon">🔒</div>
+      <h2>Thanks for being honest!</h2>
+      <p class="message">
+        We appreciate your honesty. Unfortunately, this content is reserved for those aged <strong>18 and above</strong>.
+      </p>
+      <p class="message">
+        Come back when you're a little older — we'll be here. Until then, stay curious, stay safe, and enjoy being young! <span class="heart">♥</span>
+      </p>
+      <p class="signature">— Team Durex</p>
     </div>
+
   </div>
 
 <script>
@@ -202,15 +273,14 @@
   // This opens PDF preview directly in browser (mobile-friendly)
   const PDF_URL = `https://drive.google.com/file/d/${GDRIVE_FILE_ID}/preview`;
 
-  // Where to send users who are under 18
-  const REJECT_URL = "https://www.durex.com";
-
   function confirmAge() {
     window.location.href = PDF_URL;
   }
 
   function rejectAge() {
-    window.location.href = REJECT_URL;
+    // Show the friendly reject message instead of redirecting
+    document.getElementById('ageScreen').style.display = 'none';
+    document.getElementById('rejectScreen').classList.add('active');
   }
 </script>
 
