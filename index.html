@@ -268,18 +268,10 @@
 
 <script>
   // ====================================================================
-  // GOOGLE DRIVE SETUP:
-  // 1. Upload PDF to Google Drive
-  // 2. Right-click → Share → "Anyone with the link"
-  // 3. Copy the File ID from the link
-  //    Example link: https://drive.google.com/file/d/1ABCxyz123XYZ/view
-  //    File ID is:  1ABCxyz123XYZ
-  // 4. Paste your File ID below 👇
+  // PDF is hosted directly on Vercel (same folder as index.html)
+  // File: durex-brochure.pdf
   // ====================================================================
-  const GDRIVE_FILE_ID = "1e18NkQjuPibQvyiJpigneCWQqXDc1gxS";
-
-  // This opens PDF preview directly in browser (mobile-friendly)
-  const PDF_URL = `https://drive.google.com/file/d/${GDRIVE_FILE_ID}/preview`;
+  const PDF_URL = "durex-brochure.pdf";
 
   function confirmAge() {
     // Track YES click (18+ users) in Google Analytics
