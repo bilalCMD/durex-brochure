@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
 <title>Durex – Age Verification</title>
+
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N1KVEEMH49"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N1KVEEMH49');
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -268,10 +278,26 @@
   const PDF_URL = `https://drive.google.com/file/d/${GDRIVE_FILE_ID}/preview`;
 
   function confirmAge() {
+    // Track YES click (18+ users) in Google Analytics
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'age_verified_yes', {
+        'event_category': 'Age Gate',
+        'event_label': 'User confirmed 18+',
+        'value': 1
+      });
+    }
     window.location.href = PDF_URL;
   }
 
   function rejectAge() {
+    // Track NO click (under 18 users) in Google Analytics
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'age_verified_no', {
+        'event_category': 'Age Gate',
+        'event_label': 'User under 18',
+        'value': 0
+      });
+    }
     // Show the friendly reject message instead of redirecting
     document.getElementById('ageScreen').style.display = 'none';
     document.getElementById('rejectScreen').classList.add('active');
