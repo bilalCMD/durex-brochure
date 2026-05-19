@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Durex – Product Brochure</title>
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+<!-- Google Analytics (GA4) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N1KVEEMH49"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-N1KVEEMH49');
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --durex-blue: #000E88;
+    --durex-blue-dark: #00065C;
+    --durex-blue-deep: #000033;
+    --durex-pink: #E6126B;
+    --white: #ffffff;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: var(--durex-blue);
+  }
+
+  body {
+    background: linear-gradient(135deg, var(--durex-blue) 0%, var(--durex-blue-dark) 60%, var(--durex-blue-deep) 100%);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, rgba(230, 18, 107, 0.18) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    bottom: -25%;
+    left: -15%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, rgba(0, 119, 200, 0.22) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .header {
+    position: relative;
+    z-index: 10;
+    padding: 20px 20px 10px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .header img {
+    height: 50px;
+    width: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  }
+
+  .gallery-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    overflow: hidden;
+    z-index: 5;
+    min-height: 0;
+  }
+
+  .gallery {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 970 / 600;
+    max-height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .slides {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+    cursor: grab;
+  }
+
+  .slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .slide img.loaded {
+    opacity: 1;
+  }
+
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--durex-blue);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+    z-index: 20;
+    font-size: 22px;
+    font-weight: 900;
+    font-family: inherit;
+  }
+
+  .arrow:hover {
+    transform: translateY(-50%) scale(1.1);
+    background: white;
+  }
+
+  .arrow:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .arrow.prev { left: 12px; }
+  .arrow.next { right: 12px; }
+
+  .arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .nav-bottom {
+    position: relative;
+    z-index: 10;
+    padding: 15px 20px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+  }
+
+  .counter {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 7px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+  }
+
+  .counter .current {
+    color: var(--white);
+    font-weight: 900;
+  }
+
+  .dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 90vw;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 0;
+  }
+
+  .dot.active {
+    background: var(--white);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .header { padding: 15px 15px 5px; }
+    .header img { height: 38px; }
+    .gallery-container { padding: 10px; }
+    .gallery { border-radius: 14px; }
+    .arrow {
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+    }
+    .arrow.prev { left: 8px; }
+    .arrow.next { right: 8px; }
+    .nav-bottom { padding: 12px 15px 18px; gap: 12px; }
+    .counter { font-size: 12px; padding: 6px 14px; }
+    .dot { width: 6px; height: 6px; }
+    .dot.active { width: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="Durex_logo.png" alt="Durex" />
+</div>
+
+<div class="gallery-container">
+  <div class="gallery">
+    <div class="slides" id="slides">
+      <div class="slide"><img src="slides/slide-01.webp" alt="Durex Slide 1" /></div>
+      <div class="slide"><img src="slides/slide-02.jpg" alt="Durex Slide 2" /></div>
+      <div class="slide"><img src="slides/slide-03.jpg" alt="Durex Slide 3" /></div>
+      <div class="slide"><img src="slides/slide-04.jpg" alt="Durex Slide 4" /></div>
+      <div class="slide"><img src="slides/slide-05.jpg" alt="Durex Slide 5" /></div>
+      <div class="slide"><img src="slides/slide-06.jpg" alt="Durex Slide 6" /></div>
+      <div class="slide"><img src="slides/slide-07.jpg" alt="Durex Slide 7" /></div>
+      <div class="slide"><img src="slides/slide-08.jpg" alt="Durex Slide 8" /></div>
+      <div class="slide"><img src="slides/slide-09.jpg" alt="Durex Slide 9" /></div>
+      <div class="slide"><img src="slides/slide-10.jpg" alt="Durex Slide 10" /></div>
+    </div>
+
+    <button class="arrow prev" id="prevBtn" aria-label="Previous">‹</button>
+    <button class="arrow next" id="nextBtn" aria-label="Next">›</button>
+  </div>
+</div>
+
+<div class="nav-bottom">
+  <div class="counter">
+    <span class="current" id="currentSlide">1</span> / <span id="totalSlides">10</span>
+  </div>
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+  const slides = document.getElementById('slides');
+  const totalSlides = document.querySelectorAll('.slide').length;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const currentSlideEl = document.getElementById('currentSlide');
+  const totalSlidesEl = document.getElementById('totalSlides');
+  const dotsContainer = document.getElementById('dots');
+
+  let currentIndex = 0;
+  totalSlidesEl.textContent = totalSlides;
+
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+  }
+
+  function goToSlide(index) {
+    if (index < 0) index = 0;
+    if (index >= totalSlides) index = totalSlides - 1;
+    currentIndex = index;
+    slides.style.transform = `translateX(-${index * 100}%)`;
+    currentSlideEl.textContent = index + 1;
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === index);
+    });
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === totalSlides - 1;
+
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'slide_view', {
+        'event_category': 'Brochure',
+        'event_label': `Slide ${index + 1}`,
+        'value': index + 1
+      });
+    }
+  }
+
+  prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+  nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
+    if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
+  });
+
+  let touchStartX = 0, touchEndX = 0;
+  slides.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  slides.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    }
+  }, { passive: true });
+
+  let isDragging = false, dragStartX = 0;
+  slides.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    slides.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mouseup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    slides.style.cursor = 'grab';
+    const diff = dragStartX - e.clientX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    }
+  });
+
+  document.querySelectorAll('.slide img').forEach(img => {
+    if (img.complete) img.classList.add('loaded');
+    else img.addEventListener('load', () => img.classList.add('loaded'));
+  });
+
+  goToSlide(0);
+</script>
+
+</body>
+</html>
