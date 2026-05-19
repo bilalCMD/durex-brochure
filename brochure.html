@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#000E88" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>Durex – Product Brochure</title>
 
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -22,7 +25,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
 
   :root {
     --durex-blue: #000E88;
@@ -30,6 +39,8 @@
     --durex-blue-deep: #000033;
     --durex-pink: #E6126B;
     --white: #ffffff;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   html, body {
@@ -39,6 +50,7 @@
     font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     background: var(--durex-blue);
+    touch-action: pan-y;
   }
 
   body {
@@ -47,16 +59,19 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
   }
 
+  /* Decorative glows */
   body::before {
     content: "";
     position: fixed;
     top: -20%;
     right: -10%;
-    width: 60vw;
-    height: 60vw;
-    background: radial-gradient(circle, rgba(230, 18, 107, 0.18) 0%, transparent 60%);
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, rgba(230, 18, 107, 0.2) 0%, transparent 60%);
     pointer-events: none;
     z-index: 0;
   }
@@ -66,34 +81,36 @@
     position: fixed;
     bottom: -25%;
     left: -15%;
-    width: 70vw;
-    height: 70vw;
-    background: radial-gradient(circle, rgba(0, 119, 200, 0.22) 0%, transparent 60%);
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(circle, rgba(0, 119, 200, 0.25) 0%, transparent 60%);
     pointer-events: none;
     z-index: 0;
   }
 
+  /* ============ HEADER ============ */
   .header {
     position: relative;
     z-index: 10;
-    padding: 20px 20px 10px;
+    padding: 18px 20px 12px;
     text-align: center;
     flex-shrink: 0;
   }
 
   .header img {
-    height: 50px;
+    height: 44px;
     width: auto;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
   }
 
+  /* ============ GALLERY ============ */
   .gallery-container {
     flex: 1;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px;
+    padding: 8px 16px;
     overflow: hidden;
     z-index: 5;
     min-height: 0;
@@ -103,13 +120,14 @@
     position: relative;
     width: 100%;
     max-width: 900px;
-    aspect-ratio: 970 / 600;
     max-height: 100%;
-    border-radius: 20px;
+    aspect-ratio: 970 / 600;
+    border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.2);
   }
 
   .slides {
@@ -121,6 +139,10 @@
     cursor: grab;
   }
 
+  .slides:active {
+    cursor: grabbing;
+  }
+
   .slide {
     flex: 0 0 100%;
     width: 100%;
@@ -129,6 +151,7 @@
     align-items: center;
     justify-content: center;
     user-select: none;
+    position: relative;
   }
 
   .slide img {
@@ -146,146 +169,269 @@
     opacity: 1;
   }
 
+  /* Loading shimmer */
+  .slide::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    z-index: -1;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ============ ARROW BUTTONS ============ */
   .arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.98);
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--durex-blue);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
     transition: all 0.2s ease;
     z-index: 20;
-    font-size: 22px;
-    font-weight: 900;
     font-family: inherit;
+    padding: 0;
+  }
+
+  .arrow svg {
+    width: 22px;
+    height: 22px;
+    stroke: var(--durex-blue);
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .arrow:hover {
-    transform: translateY(-50%) scale(1.1);
+    transform: translateY(-50%) scale(1.08);
     background: white;
   }
 
   .arrow:active {
-    transform: translateY(-50%) scale(0.95);
+    transform: translateY(-50%) scale(0.92);
   }
 
   .arrow.prev { left: 12px; }
   .arrow.next { right: 12px; }
 
   .arrow:disabled {
-    opacity: 0.3;
+    opacity: 0.35;
     cursor: not-allowed;
+    pointer-events: none;
   }
 
+  /* ============ BOTTOM NAV ============ */
   .nav-bottom {
     position: relative;
     z-index: 10;
-    padding: 15px 20px 25px;
+    padding: 14px 16px 22px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: 14px;
     flex-shrink: 0;
   }
 
   .counter {
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.9);
-    background: rgba(255, 255, 255, 0.1);
-    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.12);
+    padding: 8px 20px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
 
   .counter .current {
     color: var(--white);
     font-weight: 900;
+    font-size: 15px;
+  }
+
+  .counter .total {
+    opacity: 0.7;
   }
 
   .dots {
     display: flex;
-    gap: 8px;
+    gap: 7px;
     justify-content: center;
     flex-wrap: wrap;
     max-width: 90vw;
   }
 
   .dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     border: none;
     padding: 0;
   }
 
   .dot.active {
     background: var(--white);
-    width: 24px;
+    width: 26px;
     border-radius: 4px;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
   }
 
+  /* ============ MOBILE OPTIMIZATIONS ============ */
   @media (max-width: 768px) {
-    .header { padding: 15px 15px 5px; }
-    .header img { height: 38px; }
-    .gallery-container { padding: 10px; }
-    .gallery { border-radius: 14px; }
+    .header {
+      padding: 16px 16px 8px;
+    }
+    .header img {
+      height: 36px;
+    }
+    .gallery-container {
+      padding: 8px 12px;
+    }
+    .gallery {
+      border-radius: 14px;
+    }
     .arrow {
-      width: 40px;
-      height: 40px;
-      font-size: 18px;
+      width: 42px;
+      height: 42px;
+    }
+    .arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+    .arrow.prev { left: 10px; }
+    .arrow.next { right: 10px; }
+    .nav-bottom {
+      padding: 12px 12px 18px;
+      gap: 12px;
+    }
+    .counter {
+      font-size: 12px;
+      padding: 7px 16px;
+      letter-spacing: 1px;
+    }
+    .counter .current {
+      font-size: 13px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+    }
+    .dot.active {
+      width: 20px;
+    }
+  }
+
+  /* Small phones */
+  @media (max-width: 380px) {
+    .header img { height: 32px; }
+    .arrow {
+      width: 38px;
+      height: 38px;
     }
     .arrow.prev { left: 8px; }
     .arrow.next { right: 8px; }
-    .nav-bottom { padding: 12px 15px 18px; gap: 12px; }
-    .counter { font-size: 12px; padding: 6px 14px; }
-    .dot { width: 6px; height: 6px; }
-    .dot.active { width: 18px; }
+  }
+
+  /* Landscape phones */
+  @media (max-height: 500px) and (orientation: landscape) {
+    .header {
+      padding: 8px 16px 4px;
+    }
+    .header img {
+      height: 28px;
+    }
+    .gallery-container {
+      padding: 4px 12px;
+    }
+    .nav-bottom {
+      padding: 8px 12px 12px;
+      gap: 8px;
+    }
+    .counter {
+      padding: 5px 14px;
+      font-size: 11px;
+    }
+  }
+
+  /* Tablets - bigger images */
+  @media (min-width: 769px) and (max-width: 1200px) {
+    .header img { height: 50px; }
+    .gallery { max-width: 800px; }
+  }
+
+  /* Hint animation on first load (mobile) */
+  @keyframes swipe-hint {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-30px); }
+  }
+
+  .swipe-hint {
+    animation: swipe-hint 1.5s ease-in-out 2;
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <img src="Durex_logo.png" alt="Durex" />
+  <img src="durex-logo.png" alt="Durex" />
 </div>
 
 <div class="gallery-container">
   <div class="gallery">
     <div class="slides" id="slides">
-      <div class="slide"><img src="slide-01.webp" alt="Durex Slide 1" /></div>
-      <div class="slide"><img src="slide-02.jpg" alt="Durex Slide 2" /></div>
-      <div class="slide"><img src="slide-03.jpg" alt="Durex Slide 3" /></div>
-      <div class="slide"><img src="slide-04.jpg" alt="Durex Slide 4" /></div>
-      <div class="slide"><img src="slide-05.jpg" alt="Durex Slide 5" /></div>
-      <div class="slide"><img src="slide-06.jpg" alt="Durex Slide 6" /></div>
-      <div class="slide"><img src="slide-07.jpg" alt="Durex Slide 7" /></div>
-      <div class="slide"><img src="slide-08.jpg" alt="Durex Slide 8" /></div>
-      <div class="slide"><img src="slide-09.jpg" alt="Durex Slide 9" /></div>
-      <div class="slide"><img src="slide-10.jpg" alt="Durex Slide 10" /></div>
+      <div class="slide"><img src="slide-01.webp" alt="Durex Slide 1" loading="eager" /></div>
+      <div class="slide"><img src="slide-02.jpg" alt="Durex Slide 2" loading="eager" /></div>
+      <div class="slide"><img src="slide-03.jpg" alt="Durex Slide 3" loading="lazy" /></div>
+      <div class="slide"><img src="slide-04.jpg" alt="Durex Slide 4" loading="lazy" /></div>
+      <div class="slide"><img src="slide-05.jpg" alt="Durex Slide 5" loading="lazy" /></div>
+      <div class="slide"><img src="slide-06.jpg" alt="Durex Slide 6" loading="lazy" /></div>
+      <div class="slide"><img src="slide-07.jpg" alt="Durex Slide 7" loading="lazy" /></div>
+      <div class="slide"><img src="slide-08.jpg" alt="Durex Slide 8" loading="lazy" /></div>
+      <div class="slide"><img src="slide-09.jpg" alt="Durex Slide 9" loading="lazy" /></div>
+      <div class="slide"><img src="slide-10.jpg" alt="Durex Slide 10" loading="lazy" /></div>
     </div>
 
-    <button class="arrow prev" id="prevBtn" aria-label="Previous">‹</button>
-    <button class="arrow next" id="nextBtn" aria-label="Next">›</button>
+    <button class="arrow prev" id="prevBtn" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button class="arrow next" id="nextBtn" aria-label="Next">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
   </div>
 </div>
 
 <div class="nav-bottom">
   <div class="counter">
-    <span class="current" id="currentSlide">1</span> / <span id="totalSlides">10</span>
+    <span class="current" id="currentSlide">1</span>
+    <span class="total">/ <span id="totalSlides">10</span></span>
   </div>
   <div class="dots" id="dots"></div>
 </div>
@@ -302,6 +448,7 @@
   let currentIndex = 0;
   totalSlidesEl.textContent = totalSlides;
 
+  // Create dots
   for (let i = 0; i < totalSlides; i++) {
     const dot = document.createElement('button');
     dot.className = 'dot' + (i === 0 ? ' active' : '');
@@ -322,6 +469,12 @@
     prevBtn.disabled = index === 0;
     nextBtn.disabled = index === totalSlides - 1;
 
+    // Haptic feedback on mobile
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+
+    // Analytics
     if (typeof gtag !== 'undefined') {
       gtag('event', 'slide_view', {
         'event_category': 'Brochure',
@@ -334,45 +487,100 @@
   prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
   nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
+  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
     if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
   });
 
-  let touchStartX = 0, touchEndX = 0;
+  // Touch/swipe with live drag preview
+  let touchStartX = 0, touchCurrentX = 0, touchStartTime = 0;
+  let isDragging = false;
+
   slides.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-  }, { passive: true });
-  slides.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    const diff = touchStartX - touchEndX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) goToSlide(currentIndex + 1);
-      else goToSlide(currentIndex - 1);
-    }
+    touchStartX = e.changedTouches[0].clientX;
+    touchCurrentX = touchStartX;
+    touchStartTime = Date.now();
+    isDragging = true;
+    slides.style.transition = 'none';
   }, { passive: true });
 
-  let isDragging = false, dragStartX = 0;
-  slides.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    dragStartX = e.clientX;
-    slides.style.cursor = 'grabbing';
-  });
-  document.addEventListener('mouseup', (e) => {
+  slides.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    touchCurrentX = e.changedTouches[0].clientX;
+    const diff = touchCurrentX - touchStartX;
+    const offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
+    slides.style.transform = `translateX(${offset}%)`;
+  }, { passive: true });
+
+  slides.addEventListener('touchend', (e) => {
     if (!isDragging) return;
     isDragging = false;
-    slides.style.cursor = 'grab';
-    const diff = dragStartX - e.clientX;
-    if (Math.abs(diff) > 50) {
+    slides.style.transition = '';
+    const diff = touchStartX - touchCurrentX;
+    const duration = Date.now() - touchStartTime;
+    const threshold = slides.offsetWidth * 0.2;
+
+    // Fast swipe detection
+    if (duration < 250 && Math.abs(diff) > 30) {
       if (diff > 0) goToSlide(currentIndex + 1);
       else goToSlide(currentIndex - 1);
+    } else if (Math.abs(diff) > threshold) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    } else {
+      goToSlide(currentIndex);
     }
   });
 
-  document.querySelectorAll('.slide img').forEach(img => {
-    if (img.complete) img.classList.add('loaded');
-    else img.addEventListener('load', () => img.classList.add('loaded'));
+  // Mouse drag (desktop)
+  let mouseStartX = 0, mouseCurrentX = 0, isMouseDragging = false;
+
+  slides.addEventListener('mousedown', (e) => {
+    isMouseDragging = true;
+    mouseStartX = e.clientX;
+    mouseCurrentX = mouseStartX;
+    slides.style.transition = 'none';
+    e.preventDefault();
   });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isMouseDragging) return;
+    mouseCurrentX = e.clientX;
+    const diff = mouseCurrentX - mouseStartX;
+    const offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
+    slides.style.transform = `translateX(${offset}%)`;
+  });
+
+  document.addEventListener('mouseup', (e) => {
+    if (!isMouseDragging) return;
+    isMouseDragging = false;
+    slides.style.transition = '';
+    const diff = mouseStartX - mouseCurrentX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    } else {
+      goToSlide(currentIndex);
+    }
+  });
+
+  // Image load
+  document.querySelectorAll('.slide img').forEach(img => {
+    if (img.complete && img.naturalHeight > 0) {
+      img.classList.add('loaded');
+    } else {
+      img.addEventListener('load', () => img.classList.add('loaded'));
+    }
+  });
+
+  // Show swipe hint on mobile first time
+  if ('ontouchstart' in window && !sessionStorage.getItem('hintShown')) {
+    setTimeout(() => {
+      slides.classList.add('swipe-hint');
+      sessionStorage.setItem('hintShown', '1');
+    }, 800);
+  }
 
   goToSlide(0);
 </script>
