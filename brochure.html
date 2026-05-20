@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<!-- Allow pinch-zoom -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#000E88" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -30,7 +31,6 @@
     padding: 0;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
   }
 
   :root {
@@ -50,7 +50,6 @@
     font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     background: var(--durex-blue);
-    touch-action: pan-y;
   }
 
   body {
@@ -63,17 +62,42 @@
     padding-bottom: var(--safe-bottom);
   }
 
-  /* ============ DESKTOP HEADER ============ */
+  /* Decorative glows */
+  body::before {
+    content: "";
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 70vw;
+    height: 70vw;
+    background: radial-gradient(circle, rgba(230, 18, 107, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    bottom: -25%;
+    left: -15%;
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(circle, rgba(0, 119, 200, 0.2) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ============ HEADER ============ */
   .header {
     position: relative;
     z-index: 10;
-    padding: 18px 20px 12px;
+    padding: 16px 20px 8px;
     text-align: center;
     flex-shrink: 0;
   }
 
   .header img {
-    height: 44px;
+    height: 40px;
     width: auto;
     filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
   }
@@ -85,7 +109,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
+    padding: 8px 12px;
     overflow: hidden;
     z-index: 5;
     min-height: 0;
@@ -96,13 +120,30 @@
     width: 100%;
     max-width: 900px;
     max-height: 100%;
-    aspect-ratio: 970 / 600;
-    border-radius: 18px;
+    border-radius: 14px;
     overflow: hidden;
     box-shadow:
       0 20px 60px rgba(0, 0, 0, 0.5),
       0 0 0 1px rgba(255, 255, 255, 0.08);
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Desktop: keep landscape ratio */
+  @media (min-width: 769px) {
+    .gallery {
+      aspect-ratio: 970 / 600;
+    }
+  }
+
+  /* Mobile: take available space, image fits inside */
+  @media (max-width: 768px) {
+    .gallery {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .slides {
@@ -111,11 +152,6 @@
     display: flex;
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
-    cursor: grab;
-  }
-
-  .slides:active {
-    cursor: grabbing;
   }
 
   .slide {
@@ -130,31 +166,43 @@
     overflow: hidden;
   }
 
-  .slide-inner {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
   .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
     user-select: none;
     -webkit-user-drag: none;
-    pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease;
+    /* Allow pinch zoom on the image */
+    touch-action: pinch-zoom;
   }
 
   .slide img.loaded {
     opacity: 1;
   }
 
-  /* ============ DESKTOP ARROW BUTTONS ============ */
+  /* ============ BOTTOM NAV ============ */
+  .nav-bottom {
+    position: relative;
+    z-index: 10;
+    padding: 14px 16px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .nav-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
   .arrow {
     width: 48px;
     height: 48px;
@@ -200,32 +248,13 @@
     pointer-events: none;
   }
 
-  /* ============ BOTTOM NAV (DESKTOP) ============ */
-  .nav-bottom {
-    position: relative;
-    z-index: 10;
-    padding: 18px 16px 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    flex-shrink: 0;
-  }
-
-  .nav-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-  }
-
   .counter {
     font-size: 14px;
     font-weight: 800;
     letter-spacing: 1.5px;
     color: var(--white);
     background: rgba(255, 255, 255, 0.12);
-    padding: 12px 24px;
+    padding: 12px 22px;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(20px);
@@ -251,7 +280,7 @@
 
   .dots {
     display: flex;
-    gap: 7px;
+    gap: 6px;
     justify-content: center;
     flex-wrap: wrap;
     max-width: 90vw;
@@ -272,262 +301,97 @@
     background: var(--white);
     width: 26px;
     border-radius: 4px;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   }
 
-  /* ============ STORIES-STYLE PROGRESS BAR (mobile only) ============ */
-  .progress-bar {
-    display: none;
+  /* Pinch zoom hint */
+  .zoom-hint {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 14px 22px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
-  /* ============ MOBILE TAP ZONES (invisible) ============ */
-  .tap-zones {
-    display: none;
+  .zoom-hint.show {
+    animation: hintShow 3s ease forwards;
   }
 
-  /* ============ SWIPE HINT (mobile only, first time) ============ */
-  .swipe-hint {
-    display: none;
+  @keyframes hintShow {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
   }
 
-  /* ====================================================== */
-  /* ============ MOBILE - FULL SCREEN STORIES MODE ====== */
-  /* ====================================================== */
-  @media (max-width: 768px) and (orientation: portrait) {
-    body {
-      background: #000;  /* pure black for immersive feel */
-    }
-
-    /* Hide desktop header */
+  /* ============ MOBILE TWEAKS ============ */
+  @media (max-width: 768px) {
     .header {
-      display: none;
-    }
-
-    /* Hide desktop nav bottom */
-    .nav-bottom {
-      display: none;
-    }
-
-    /* Gallery becomes full screen */
-    .gallery-container {
-      padding: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .gallery {
-      width: 100%;
-      height: 100%;
-      max-width: none;
-      max-height: none;
-      aspect-ratio: unset;
-      border-radius: 0;
-      box-shadow: none;
-      background: #000;
-    }
-
-    .slide {
-      background: #000;
-    }
-
-    /* Image rotation - landscape becomes portrait full screen */
-    .slide-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-
-    .slide img {
-      /* Image is 970x600 (landscape). We rotate 90deg to make it portrait */
-      /* After rotation: width=600, height=970 */
-      /* We need image's "height" (970) to fill screen height, "width" (600) to fit */
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(90deg);
-      transform-origin: center center;
-      width: auto;
-      height: auto;
-      /* Sized dynamically by JS */
-      object-fit: contain;
-    }
-
-    /* ============ MOBILE: Progress bar at top ============ */
-    .progress-bar {
-      display: flex;
-      position: fixed;
-      top: calc(var(--safe-top) + 12px);
-      left: 12px;
-      right: 12px;
-      z-index: 100;
-      gap: 4px;
-      pointer-events: none;
-    }
-
-    .progress-segment {
-      flex: 1;
-      height: 3px;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 2px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .progress-segment.completed {
-      background: rgba(255, 255, 255, 0.95);
-    }
-
-    .progress-segment.active {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-segment.active::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background: var(--white);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-    }
-
-    /* ============ MOBILE: Tap zones for navigation ============ */
-    .tap-zones {
-      display: block;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 50;
-      pointer-events: none;
-    }
-
-    .tap-zone {
-      position: absolute;
-      top: 0;
-      height: 100%;
-      width: 30%;
-      pointer-events: auto;
-      cursor: pointer;
-    }
-
-    .tap-zone.left {
-      left: 0;
-    }
-
-    .tap-zone.right {
-      right: 0;
-    }
-
-    /* ============ MOBILE: Floating counter (bottom) ============ */
-    .mobile-counter {
-      display: flex;
-      position: fixed;
-      bottom: calc(var(--safe-bottom) + 20px);
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 8px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      pointer-events: none;
-    }
-
-    .mobile-counter .durex-mini {
-      height: 18px;
-      width: auto;
-      filter: brightness(0) invert(1);
-    }
-
-    .mobile-counter .num {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: var(--white);
-    }
-
-    /* ============ MOBILE: Swipe hint (first time) ============ */
-    .swipe-hint {
-      display: flex;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 90;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(20px);
-      padding: 14px 24px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      color: white;
-      align-items: center;
-      gap: 10px;
-      pointer-events: none;
-      animation: hintFadeOut 3s ease forwards;
-      opacity: 0;
-    }
-
-    .swipe-hint.show {
-      animation: hintFadeOut 3s ease forwards;
-    }
-
-    @keyframes hintFadeOut {
-      0% { opacity: 0; }
-      15% { opacity: 1; }
-      75% { opacity: 1; }
-      100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-    }
-
-    .swipe-arrow {
-      animation: swipeArrow 1.5s ease-in-out infinite;
-    }
-
-    @keyframes swipeArrow {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(-8px); }
-    }
-  }
-
-  /* Hide mobile counter on desktop */
-  .mobile-counter {
-    display: none;
-  }
-
-  /* Landscape phones - keep horizontal desktop view */
-  @media (max-height: 500px) and (orientation: landscape) {
-    .header {
-      padding: 8px 16px 4px;
+      padding: 14px 16px 6px;
     }
     .header img {
-      height: 28px;
+      height: 34px;
     }
     .gallery-container {
-      padding: 4px 12px;
-    }
-    .gallery {
-      aspect-ratio: 970 / 600;
+      padding: 6px 10px;
     }
     .nav-bottom {
-      padding: 8px 12px 12px;
-      gap: 8px;
+      padding: 12px 12px 18px;
+      gap: 10px;
+    }
+    .nav-controls {
+      gap: 12px;
     }
     .arrow {
-      width: 38px;
-      height: 38px;
+      width: 44px;
+      height: 44px;
+    }
+    .arrow svg {
+      width: 18px;
+      height: 18px;
     }
     .counter {
-      padding: 8px 16px;
-      font-size: 11px;
-      height: 38px;
+      font-size: 13px;
+      padding: 10px 18px;
+      min-width: 70px;
+      height: 44px;
+    }
+    .counter .current {
+      font-size: 14px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+    }
+    .dot.active {
+      width: 20px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .header img { height: 30px; }
+    .arrow {
+      width: 40px;
+      height: 40px;
+    }
+    .counter {
+      padding: 9px 14px;
       min-width: 60px;
+      height: 40px;
+      font-size: 12px;
     }
   }
 
@@ -540,51 +404,27 @@
 </head>
 <body>
 
-<!-- DESKTOP HEADER -->
 <div class="header">
   <img src="Durex_logo.png" alt="Durex" />
 </div>
 
-<!-- MOBILE: Stories-style progress bar -->
-<div class="progress-bar" id="progressBar"></div>
-
-<!-- GALLERY -->
 <div class="gallery-container">
   <div class="gallery">
     <div class="slides" id="slides">
-      <div class="slide"><div class="slide-inner"><img src="slide-01.jpg" alt="Durex Slide 1" loading="eager" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-02.jpg" alt="Durex Slide 2" loading="eager" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-03.jpg" alt="Durex Slide 3" loading="lazy" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-04.jpg" alt="Durex Slide 4" loading="lazy" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-05.jpg" alt="Durex Slide 5" loading="lazy" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-06.jpg" alt="Durex Slide 6" loading="lazy" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-07.jpg" alt="Durex Slide 7" loading="lazy" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-08.jpg" alt="Durex Slide 8" loading="lazy" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-09.jpg" alt="Durex Slide 9" loading="lazy" /></div></div>
-      <div class="slide"><div class="slide-inner"><img src="slide-10.jpg" alt="Durex Slide 10" loading="lazy" /></div></div>
+      <div class="slide"><img src="slide-01.jpg" alt="Durex Slide 1" loading="eager" /></div>
+      <div class="slide"><img src="slide-02.jpg" alt="Durex Slide 2" loading="eager" /></div>
+      <div class="slide"><img src="slide-03.jpg" alt="Durex Slide 3" loading="lazy" /></div>
+      <div class="slide"><img src="slide-04.jpg" alt="Durex Slide 4" loading="lazy" /></div>
+      <div class="slide"><img src="slide-05.jpg" alt="Durex Slide 5" loading="lazy" /></div>
+      <div class="slide"><img src="slide-06.jpg" alt="Durex Slide 6" loading="lazy" /></div>
+      <div class="slide"><img src="slide-07.jpg" alt="Durex Slide 7" loading="lazy" /></div>
+      <div class="slide"><img src="slide-08.jpg" alt="Durex Slide 8" loading="lazy" /></div>
+      <div class="slide"><img src="slide-09.jpg" alt="Durex Slide 9" loading="lazy" /></div>
+      <div class="slide"><img src="slide-10.jpg" alt="Durex Slide 10" loading="lazy" /></div>
     </div>
   </div>
 </div>
 
-<!-- MOBILE: Tap zones for navigation -->
-<div class="tap-zones">
-  <div class="tap-zone left" id="tapLeft"></div>
-  <div class="tap-zone right" id="tapRight"></div>
-</div>
-
-<!-- MOBILE: Floating counter at bottom -->
-<div class="mobile-counter">
-  <img src="Durex_logo.png" alt="Durex" class="durex-mini" />
-  <span class="num"><span id="mobileCurrent">1</span> / <span id="mobileTotal">10</span></span>
-</div>
-
-<!-- MOBILE: First-time swipe hint -->
-<div class="swipe-hint" id="swipeHint">
-  <span class="swipe-arrow">←</span>
-  <span>Swipe to navigate</span>
-</div>
-
-<!-- DESKTOP: Bottom nav -->
 <div class="nav-bottom">
   <div class="nav-controls">
     <button class="arrow prev" id="prevBtn" aria-label="Previous">
@@ -600,6 +440,12 @@
   <div class="dots" id="dots"></div>
 </div>
 
+<!-- Pinch zoom hint -->
+<div class="zoom-hint" id="zoomHint">
+  <span>🤏</span>
+  <span>Pinch to zoom</span>
+</div>
+
 <script>
   const slides = document.getElementById('slides');
   const totalSlides = document.querySelectorAll('.slide').length;
@@ -608,64 +454,12 @@
   const currentSlideEl = document.getElementById('currentSlide');
   const totalSlidesEl = document.getElementById('totalSlides');
   const dotsContainer = document.getElementById('dots');
-  const progressBar = document.getElementById('progressBar');
-  const tapLeft = document.getElementById('tapLeft');
-  const tapRight = document.getElementById('tapRight');
-  const mobileCurrent = document.getElementById('mobileCurrent');
-  const mobileTotal = document.getElementById('mobileTotal');
-  const swipeHint = document.getElementById('swipeHint');
+  const zoomHint = document.getElementById('zoomHint');
 
   let currentIndex = 0;
   totalSlidesEl.textContent = totalSlides;
-  mobileTotal.textContent = totalSlides;
 
-  // Detect mobile portrait
-  function isMobilePortrait() {
-    return window.matchMedia('(max-width: 768px) and (orientation: portrait)').matches;
-  }
-
-  // Apply image rotation sizing for mobile
-  function applyMobileRotation() {
-    const mobile = isMobilePortrait();
-    document.querySelectorAll('.slide-inner').forEach(inner => {
-      const img = inner.querySelector('img');
-      if (mobile) {
-        const rect = inner.getBoundingClientRect();
-        const screenW = rect.width;
-        const screenH = rect.height;
-
-        // Image is 970x600 landscape. After rotating 90deg:
-        // - image's "width" (970) becomes vertical extent
-        // - image's "height" (600) becomes horizontal extent
-        // We want to FILL the screen (cover entire portrait area)
-        const imgAspect = 970 / 600;
-
-        // To cover: image's rotated height (= original width) should match screen height
-        // and rotated width (= original height) should match or exceed screen width
-        let imgH, imgW;
-
-        // Option A: Fill height (rotated image height = screen height)
-        imgH = screenH; // this is the "width" before rotation
-        imgW = screenH / imgAspect; // this is the "height" before rotation
-
-        // Make sure it covers width too
-        if (imgW < screenW) {
-          imgW = screenW;
-          imgH = screenW * imgAspect;
-        }
-
-        // Set: img's CSS width = rotated width (before rotation it's the height after)
-        // Actually: we set width = imgH and height = imgW because of the rotation
-        img.style.width = imgH + 'px';
-        img.style.height = imgW + 'px';
-      } else {
-        img.style.width = '';
-        img.style.height = '';
-      }
-    });
-  }
-
-  // Create dots (desktop)
+  // Create dots
   for (let i = 0; i < totalSlides; i++) {
     const dot = document.createElement('button');
     dot.className = 'dot' + (i === 0 ? ' active' : '');
@@ -674,35 +468,16 @@
     dotsContainer.appendChild(dot);
   }
 
-  // Create progress bar segments (mobile)
-  for (let i = 0; i < totalSlides; i++) {
-    const seg = document.createElement('div');
-    seg.className = 'progress-segment';
-    if (i === 0) seg.classList.add('active');
-    progressBar.appendChild(seg);
-  }
-
-  function updateProgressBar(index) {
-    document.querySelectorAll('.progress-segment').forEach((seg, i) => {
-      seg.classList.remove('completed', 'active');
-      if (i < index) seg.classList.add('completed');
-      else if (i === index) seg.classList.add('active');
-    });
-  }
-
   function goToSlide(index) {
     if (index < 0) index = 0;
     if (index >= totalSlides) index = totalSlides - 1;
     currentIndex = index;
     slides.style.transform = `translateX(-${index * 100}%)`;
     currentSlideEl.textContent = index + 1;
-    mobileCurrent.textContent = index + 1;
 
     document.querySelectorAll('.dot').forEach((d, i) => {
       d.classList.toggle('active', i === index);
     });
-
-    updateProgressBar(index);
 
     prevBtn.disabled = index === 0;
     nextBtn.disabled = index === totalSlides - 1;
@@ -721,29 +496,38 @@
   prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
   nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
-  // Mobile tap zones
-  tapLeft.addEventListener('click', () => goToSlide(currentIndex - 1));
-  tapRight.addEventListener('click', () => goToSlide(currentIndex + 1));
-
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
     if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
   });
 
-  // Touch/swipe
+  // Touch/swipe - only on single-finger touch (so pinch-zoom works normally)
   let touchStartX = 0, touchCurrentX = 0, touchStartTime = 0;
   let isDragging = false;
+  let activeTouches = 0;
 
   slides.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].clientX;
-    touchCurrentX = touchStartX;
-    touchStartTime = Date.now();
-    isDragging = true;
-    slides.style.transition = 'none';
+    activeTouches = e.touches.length;
+    // Only enable swipe for single-finger touches
+    if (e.touches.length === 1) {
+      touchStartX = e.changedTouches[0].clientX;
+      touchCurrentX = touchStartX;
+      touchStartTime = Date.now();
+      isDragging = true;
+      slides.style.transition = 'none';
+    } else {
+      // Multi-touch (pinch) - cancel swipe
+      isDragging = false;
+      slides.style.transition = '';
+      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
   }, { passive: true });
 
   slides.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
+    if (!isDragging || e.touches.length !== 1) {
+      isDragging = false;
+      return;
+    }
     touchCurrentX = e.changedTouches[0].clientX;
     const diff = touchCurrentX - touchStartX;
     const offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
@@ -751,7 +535,11 @@
   }, { passive: true });
 
   slides.addEventListener('touchend', (e) => {
-    if (!isDragging) return;
+    if (!isDragging) {
+      slides.style.transition = '';
+      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+      return;
+    }
     isDragging = false;
     slides.style.transition = '';
     const diff = touchStartX - touchCurrentX;
@@ -805,38 +593,21 @@
   document.querySelectorAll('.slide img').forEach(img => {
     if (img.complete && img.naturalHeight > 0) {
       img.classList.add('loaded');
-      setTimeout(applyMobileRotation, 50);
     } else {
-      img.addEventListener('load', () => {
-        img.classList.add('loaded');
-        setTimeout(applyMobileRotation, 50);
-      });
+      img.addEventListener('load', () => img.classList.add('loaded'));
     }
   });
 
-  // Apply on load and resize
-  window.addEventListener('load', () => {
-    setTimeout(applyMobileRotation, 100);
-  });
-
-  window.addEventListener('resize', () => {
-    applyMobileRotation();
-  });
-
-  window.addEventListener('orientationchange', () => {
-    setTimeout(applyMobileRotation, 200);
-  });
-
-  // Show swipe hint first time on mobile
-  if (isMobilePortrait() && !sessionStorage.getItem('hintShown')) {
+  // Show pinch zoom hint on mobile (first time)
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (isMobile && !sessionStorage.getItem('zoomHintShown')) {
     setTimeout(() => {
-      swipeHint.classList.add('show');
-      sessionStorage.setItem('hintShown', '1');
-    }, 1000);
+      zoomHint.classList.add('show');
+      sessionStorage.setItem('zoomHintShown', '1');
+    }, 1500);
   }
 
   goToSlide(0);
-  setTimeout(applyMobileRotation, 100);
 </script>
 
 </body>
