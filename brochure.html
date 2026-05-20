@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<!-- Allow pinch-zoom -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#000E88" />
@@ -55,14 +54,9 @@
   body {
     background: linear-gradient(135deg, var(--durex-blue) 0%, var(--durex-blue-dark) 60%, var(--durex-blue-deep) 100%);
     color: var(--white);
-    display: flex;
-    flex-direction: column;
     position: relative;
-    padding-top: var(--safe-top);
-    padding-bottom: var(--safe-bottom);
   }
 
-  /* Decorative glows */
   body::before {
     content: "";
     position: fixed;
@@ -87,29 +81,39 @@
     z-index: 0;
   }
 
-  /* ============ HEADER ============ */
+  /* ============================================== */
+  /* ============ DESKTOP LAYOUT ================== */
+  /* ============================================== */
+  .desktop-view {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
+  }
+
   .header {
     position: relative;
     z-index: 10;
-    padding: 16px 20px 8px;
+    padding: 18px 20px 12px;
     text-align: center;
     flex-shrink: 0;
   }
 
   .header img {
-    height: 40px;
+    height: 44px;
     width: auto;
     filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
   }
 
-  /* ============ GALLERY ============ */
   .gallery-container {
     flex: 1;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 12px;
+    padding: 8px 16px;
     overflow: hidden;
     z-index: 5;
     min-height: 0;
@@ -120,41 +124,29 @@
     width: 100%;
     max-width: 900px;
     max-height: 100%;
-    border-radius: 14px;
+    aspect-ratio: 970 / 600;
+    border-radius: 18px;
     overflow: hidden;
     box-shadow:
       0 20px 60px rgba(0, 0, 0, 0.5),
       0 0 0 1px rgba(255, 255, 255, 0.08);
     background: rgba(0, 0, 0, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
-  /* Desktop: keep landscape ratio */
-  @media (min-width: 769px) {
-    .gallery {
-      aspect-ratio: 970 / 600;
-    }
-  }
-
-  /* Mobile: take available space, image fits inside */
-  @media (max-width: 768px) {
-    .gallery {
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  .slides {
+  .slides-horizontal {
     width: 100%;
     height: 100%;
     display: flex;
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
+    cursor: grab;
   }
 
-  .slide {
+  .slides-horizontal:active {
+    cursor: grabbing;
+  }
+
+  .slide-h {
     flex: 0 0 100%;
     width: 100%;
     height: 100%;
@@ -162,37 +154,32 @@
     align-items: center;
     justify-content: center;
     user-select: none;
-    position: relative;
     overflow: hidden;
   }
 
-  .slide img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
+  .slide-h img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     user-select: none;
     -webkit-user-drag: none;
+    pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease;
-    /* Allow pinch zoom on the image */
-    touch-action: pinch-zoom;
   }
 
-  .slide img.loaded {
+  .slide-h img.loaded {
     opacity: 1;
   }
 
-  /* ============ BOTTOM NAV ============ */
   .nav-bottom {
     position: relative;
     z-index: 10;
-    padding: 14px 16px 22px;
+    padding: 18px 16px 22px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     flex-shrink: 0;
   }
 
@@ -200,7 +187,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 18px;
   }
 
   .arrow {
@@ -214,13 +201,9 @@
     align-items: center;
     justify-content: center;
     color: var(--durex-blue);
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.4),
-      0 0 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     transition: all 0.2s ease;
-    font-family: inherit;
     padding: 0;
-    flex-shrink: 0;
   }
 
   .arrow svg {
@@ -233,20 +216,9 @@
     stroke-linejoin: round;
   }
 
-  .arrow:hover {
-    transform: scale(1.08);
-    background: white;
-  }
-
-  .arrow:active {
-    transform: scale(0.92);
-  }
-
-  .arrow:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
+  .arrow:hover { transform: scale(1.08); background: white; }
+  .arrow:active { transform: scale(0.92); }
+  .arrow:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
 
   .counter {
     font-size: 14px;
@@ -254,12 +226,11 @@
     letter-spacing: 1.5px;
     color: var(--white);
     background: rgba(255, 255, 255, 0.12);
-    padding: 12px 22px;
+    padding: 12px 24px;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     min-width: 80px;
     text-align: center;
     height: 48px;
@@ -268,19 +239,12 @@
     justify-content: center;
   }
 
-  .counter .current {
-    color: var(--white);
-    font-weight: 900;
-    font-size: 16px;
-  }
-
-  .counter .total {
-    opacity: 0.7;
-  }
+  .counter .current { font-weight: 900; font-size: 16px; }
+  .counter .total { opacity: 0.7; }
 
   .dots {
     display: flex;
-    gap: 6px;
+    gap: 7px;
     justify-content: center;
     flex-wrap: wrap;
     max-width: 90vw;
@@ -292,7 +256,7 @@
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.3s ease;
     border: none;
     padding: 0;
   }
@@ -301,98 +265,189 @@
     background: var(--white);
     width: 26px;
     border-radius: 4px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
   }
 
-  /* Pinch zoom hint */
-  .zoom-hint {
+  /* ============================================== */
+  /* ============ MOBILE - TIKTOK VERTICAL ======== */
+  /* ============================================== */
+  .mobile-view {
+    display: none;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+  }
+
+  .mobile-slides {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-slides::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-slide {
+    width: 100%;
+    height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #000;
+  }
+
+  .mobile-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: pinch-zoom;
+  }
+
+  /* Vertical progress bar - right side */
+  .v-progress {
     position: fixed;
+    right: 12px;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.75);
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+  }
+
+  .v-progress-dot {
+    width: 4px;
+    height: 22px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .v-progress-dot.active {
+    background: var(--white);
+    width: 5px;
+    height: 32px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  }
+
+  .v-progress-dot.passed {
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Floating top header with logo and counter */
+  .mobile-top {
+    position: fixed;
+    top: calc(var(--safe-top) + 16px);
+    left: 16px;
+    right: 16px;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  .mobile-top .logo-mini {
+    height: 28px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+  }
+
+  .mobile-top .count-pill {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
     color: white;
-    padding: 14px 22px;
-    border-radius: 30px;
+  }
+
+  .mobile-top .count-pill .num-current {
+    font-weight: 900;
     font-size: 13px;
+  }
+
+  .mobile-top .count-pill .num-total {
+    opacity: 0.7;
+  }
+
+  /* Swipe hint */
+  .swipe-hint {
+    position: fixed;
+    bottom: calc(var(--safe-bottom) + 30px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-size: 12px;
     font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
     z-index: 100;
-    opacity: 0;
     pointer-events: none;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
   }
 
-  .zoom-hint.show {
+  .swipe-hint.show {
     animation: hintShow 3s ease forwards;
   }
 
+  .swipe-hint .arrow-up {
+    display: inline-block;
+    animation: bounceUp 1.2s ease-in-out infinite;
+  }
+
+  @keyframes bounceUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
   @keyframes hintShow {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-    15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    70% { opacity: 1; }
-    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    80% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
   }
 
-  /* ============ MOBILE TWEAKS ============ */
-  @media (max-width: 768px) {
-    .header {
-      padding: 14px 16px 6px;
-    }
-    .header img {
-      height: 34px;
-    }
-    .gallery-container {
-      padding: 6px 10px;
-    }
-    .nav-bottom {
-      padding: 12px 12px 18px;
-      gap: 10px;
-    }
-    .nav-controls {
-      gap: 12px;
-    }
-    .arrow {
-      width: 44px;
-      height: 44px;
-    }
-    .arrow svg {
-      width: 18px;
-      height: 18px;
-    }
-    .counter {
-      font-size: 13px;
-      padding: 10px 18px;
-      min-width: 70px;
-      height: 44px;
-    }
-    .counter .current {
-      font-size: 14px;
-    }
-    .dot {
-      width: 6px;
-      height: 6px;
-    }
-    .dot.active {
-      width: 20px;
-    }
+  /* ============ MOBILE BREAKPOINT ============ */
+  @media (max-width: 768px) and (orientation: portrait) {
+    .desktop-view { display: none; }
+    .mobile-view { display: block; }
   }
 
-  @media (max-width: 380px) {
-    .header img { height: 30px; }
-    .arrow {
-      width: 40px;
-      height: 40px;
-    }
-    .counter {
-      padding: 9px 14px;
-      min-width: 60px;
-      height: 40px;
-      font-size: 12px;
-    }
+  /* Landscape phones - show desktop */
+  @media (max-width: 768px) and (orientation: landscape) {
+    .desktop-view { display: flex; }
+    .mobile-view { display: none; }
+    .header { padding: 8px 16px 4px; }
+    .header img { height: 28px; }
+    .gallery-container { padding: 4px 12px; }
+    .nav-bottom { padding: 8px 12px 12px; gap: 8px; }
+    .arrow { width: 38px; height: 38px; }
+    .counter { padding: 8px 16px; font-size: 11px; height: 38px; min-width: 60px; }
   }
 
   /* Tablets */
@@ -404,57 +459,90 @@
 </head>
 <body>
 
-<div class="header">
-  <img src="Durex_logo.png" alt="Durex" />
-</div>
+<!-- ================== DESKTOP VIEW ================== -->
+<div class="desktop-view">
+  <div class="header">
+    <img src="Durex_logo.png" alt="Durex" />
+  </div>
 
-<div class="gallery-container">
-  <div class="gallery">
-    <div class="slides" id="slides">
-      <div class="slide"><img src="slide-01.jpg" alt="Durex Slide 1" loading="eager" /></div>
-      <div class="slide"><img src="slide-02.jpg" alt="Durex Slide 2" loading="eager" /></div>
-      <div class="slide"><img src="slide-03.jpg" alt="Durex Slide 3" loading="lazy" /></div>
-      <div class="slide"><img src="slide-04.jpg" alt="Durex Slide 4" loading="lazy" /></div>
-      <div class="slide"><img src="slide-05.jpg" alt="Durex Slide 5" loading="lazy" /></div>
-      <div class="slide"><img src="slide-06.jpg" alt="Durex Slide 6" loading="lazy" /></div>
-      <div class="slide"><img src="slide-07.jpg" alt="Durex Slide 7" loading="lazy" /></div>
-      <div class="slide"><img src="slide-08.jpg" alt="Durex Slide 8" loading="lazy" /></div>
-      <div class="slide"><img src="slide-09.jpg" alt="Durex Slide 9" loading="lazy" /></div>
-      <div class="slide"><img src="slide-10.jpg" alt="Durex Slide 10" loading="lazy" /></div>
+  <div class="gallery-container">
+    <div class="gallery">
+      <div class="slides-horizontal" id="slidesH">
+        <div class="slide-h"><img src="slide-01.jpg" alt="Slide 1" loading="eager" /></div>
+        <div class="slide-h"><img src="slide-02.jpg" alt="Slide 2" loading="eager" /></div>
+        <div class="slide-h"><img src="slide-03.jpg" alt="Slide 3" loading="lazy" /></div>
+        <div class="slide-h"><img src="slide-04.jpg" alt="Slide 4" loading="lazy" /></div>
+        <div class="slide-h"><img src="slide-05.jpg" alt="Slide 5" loading="lazy" /></div>
+        <div class="slide-h"><img src="slide-06.jpg" alt="Slide 6" loading="lazy" /></div>
+        <div class="slide-h"><img src="slide-07.jpg" alt="Slide 7" loading="lazy" /></div>
+        <div class="slide-h"><img src="slide-08.jpg" alt="Slide 8" loading="lazy" /></div>
+        <div class="slide-h"><img src="slide-09.jpg" alt="Slide 9" loading="lazy" /></div>
+        <div class="slide-h"><img src="slide-10.jpg" alt="Slide 10" loading="lazy" /></div>
+      </div>
     </div>
+  </div>
+
+  <div class="nav-bottom">
+    <div class="nav-controls">
+      <button class="arrow prev" id="prevBtn" aria-label="Previous">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="counter">
+        <span class="current" id="currentSlide">1</span><span class="total"> / <span id="totalSlides">10</span></span>
+      </div>
+      <button class="arrow next" id="nextBtn" aria-label="Next">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+    <div class="dots" id="dots"></div>
   </div>
 </div>
 
-<div class="nav-bottom">
-  <div class="nav-controls">
-    <button class="arrow prev" id="prevBtn" aria-label="Previous">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-    </button>
-    <div class="counter">
-      <span class="current" id="currentSlide">1</span><span class="total"> / <span id="totalSlides">10</span></span>
-    </div>
-    <button class="arrow next" id="nextBtn" aria-label="Next">
-      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
-    </button>
-  </div>
-  <div class="dots" id="dots"></div>
-</div>
+<!-- ================== MOBILE VIEW (TikTok Style) ================== -->
+<div class="mobile-view">
 
-<!-- Pinch zoom hint -->
-<div class="zoom-hint" id="zoomHint">
-  <span>🤏</span>
-  <span>Pinch to zoom</span>
+  <!-- Top floating: Logo + Counter -->
+  <div class="mobile-top">
+    <img src="Durex_logo.png" alt="Durex" class="logo-mini" />
+    <div class="count-pill">
+      <span class="num-current" id="mobileCurrent">1</span><span class="num-total"> / <span id="mobileTotal">10</span></span>
+    </div>
+  </div>
+
+  <!-- Vertical scrolling slides -->
+  <div class="mobile-slides" id="mobileSlides">
+    <div class="mobile-slide" data-index="0"><img src="slide-01.jpg" alt="Slide 1" loading="eager" /></div>
+    <div class="mobile-slide" data-index="1"><img src="slide-02.jpg" alt="Slide 2" loading="eager" /></div>
+    <div class="mobile-slide" data-index="2"><img src="slide-03.jpg" alt="Slide 3" loading="lazy" /></div>
+    <div class="mobile-slide" data-index="3"><img src="slide-04.jpg" alt="Slide 4" loading="lazy" /></div>
+    <div class="mobile-slide" data-index="4"><img src="slide-05.jpg" alt="Slide 5" loading="lazy" /></div>
+    <div class="mobile-slide" data-index="5"><img src="slide-06.jpg" alt="Slide 6" loading="lazy" /></div>
+    <div class="mobile-slide" data-index="6"><img src="slide-07.jpg" alt="Slide 7" loading="lazy" /></div>
+    <div class="mobile-slide" data-index="7"><img src="slide-08.jpg" alt="Slide 8" loading="lazy" /></div>
+    <div class="mobile-slide" data-index="8"><img src="slide-09.jpg" alt="Slide 9" loading="lazy" /></div>
+    <div class="mobile-slide" data-index="9"><img src="slide-10.jpg" alt="Slide 10" loading="lazy" /></div>
+  </div>
+
+  <!-- Vertical progress bar -->
+  <div class="v-progress" id="vProgress"></div>
+
+  <!-- Swipe hint -->
+  <div class="swipe-hint" id="swipeHint">
+    <span class="arrow-up">↑</span>
+    <span>Swipe up to see more</span>
+  </div>
+
 </div>
 
 <script>
-  const slides = document.getElementById('slides');
-  const totalSlides = document.querySelectorAll('.slide').length;
+  // ============ DESKTOP LOGIC ============
+  const slidesH = document.getElementById('slidesH');
+  const totalSlides = 10;
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const currentSlideEl = document.getElementById('currentSlide');
   const totalSlidesEl = document.getElementById('totalSlides');
   const dotsContainer = document.getElementById('dots');
-  const zoomHint = document.getElementById('zoomHint');
 
   let currentIndex = 0;
   totalSlidesEl.textContent = totalSlides;
@@ -463,27 +551,119 @@
   for (let i = 0; i < totalSlides; i++) {
     const dot = document.createElement('button');
     dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-    dot.addEventListener('click', () => goToSlide(i));
+    dot.addEventListener('click', () => goToSlideDesktop(i));
     dotsContainer.appendChild(dot);
   }
 
-  function goToSlide(index) {
+  function goToSlideDesktop(index) {
     if (index < 0) index = 0;
     if (index >= totalSlides) index = totalSlides - 1;
     currentIndex = index;
-    slides.style.transform = `translateX(-${index * 100}%)`;
+    slidesH.style.transform = `translateX(-${index * 100}%)`;
     currentSlideEl.textContent = index + 1;
-
     document.querySelectorAll('.dot').forEach((d, i) => {
       d.classList.toggle('active', i === index);
     });
-
     prevBtn.disabled = index === 0;
     nextBtn.disabled = index === totalSlides - 1;
 
-    if (navigator.vibrate) navigator.vibrate(10);
+    trackSlide(index);
+  }
 
+  prevBtn.addEventListener('click', () => goToSlideDesktop(currentIndex - 1));
+  nextBtn.addEventListener('click', () => goToSlideDesktop(currentIndex + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') goToSlideDesktop(currentIndex - 1);
+    if (e.key === 'ArrowRight') goToSlideDesktop(currentIndex + 1);
+  });
+
+  // Desktop swipe (horizontal)
+  let mouseStartX = 0, mouseCurrentX = 0, isMouseDragging = false;
+
+  slidesH.addEventListener('mousedown', (e) => {
+    isMouseDragging = true;
+    mouseStartX = e.clientX;
+    mouseCurrentX = mouseStartX;
+    slidesH.style.transition = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isMouseDragging) return;
+    mouseCurrentX = e.clientX;
+    const diff = mouseCurrentX - mouseStartX;
+    const offset = -(currentIndex * 100) + (diff / slidesH.offsetWidth) * 100;
+    slidesH.style.transform = `translateX(${offset}%)`;
+  });
+
+  document.addEventListener('mouseup', (e) => {
+    if (!isMouseDragging) return;
+    isMouseDragging = false;
+    slidesH.style.transition = '';
+    const diff = mouseStartX - mouseCurrentX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToSlideDesktop(currentIndex + 1);
+      else goToSlideDesktop(currentIndex - 1);
+    } else {
+      goToSlideDesktop(currentIndex);
+    }
+  });
+
+  // ============ MOBILE LOGIC ============
+  const mobileSlides = document.getElementById('mobileSlides');
+  const mobileCurrent = document.getElementById('mobileCurrent');
+  const mobileTotal = document.getElementById('mobileTotal');
+  const vProgress = document.getElementById('vProgress');
+  const swipeHint = document.getElementById('swipeHint');
+
+  mobileTotal.textContent = totalSlides;
+
+  // Create vertical progress dots
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'v-progress-dot' + (i === 0 ? ' active' : '');
+    vProgress.appendChild(dot);
+  }
+
+  // Track scroll position to update counter and progress
+  let scrollTimeout;
+  let lastMobileIndex = 0;
+
+  mobileSlides.addEventListener('scroll', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      const scrollTop = mobileSlides.scrollTop;
+      const slideHeight = window.innerHeight;
+      const index = Math.round(scrollTop / slideHeight);
+
+      if (index !== lastMobileIndex) {
+        lastMobileIndex = index;
+        mobileCurrent.textContent = index + 1;
+
+        document.querySelectorAll('.v-progress-dot').forEach((d, i) => {
+          d.classList.remove('active', 'passed');
+          if (i < index) d.classList.add('passed');
+          else if (i === index) d.classList.add('active');
+        });
+
+        if (navigator.vibrate) navigator.vibrate(8);
+        trackSlide(index);
+      }
+    }, 100);
+  });
+
+  // Show swipe up hint first time
+  const isMobile = window.matchMedia('(max-width: 768px) and (orientation: portrait)').matches;
+  if (isMobile && !sessionStorage.getItem('mobileHintShown')) {
+    setTimeout(() => {
+      swipeHint.classList.add('show');
+      sessionStorage.setItem('mobileHintShown', '1');
+    }, 1200);
+  }
+
+  // ============ ANALYTICS ============
+  function trackSlide(index) {
     if (typeof gtag !== 'undefined') {
       gtag('event', 'slide_view', {
         'event_category': 'Brochure',
@@ -493,121 +673,13 @@
     }
   }
 
-  prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
-  nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
-    if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
+  // Image load fade-in
+  document.querySelectorAll('.slide-h img').forEach(img => {
+    if (img.complete && img.naturalHeight > 0) img.classList.add('loaded');
+    else img.addEventListener('load', () => img.classList.add('loaded'));
   });
 
-  // Touch/swipe - only on single-finger touch (so pinch-zoom works normally)
-  let touchStartX = 0, touchCurrentX = 0, touchStartTime = 0;
-  let isDragging = false;
-  let activeTouches = 0;
-
-  slides.addEventListener('touchstart', (e) => {
-    activeTouches = e.touches.length;
-    // Only enable swipe for single-finger touches
-    if (e.touches.length === 1) {
-      touchStartX = e.changedTouches[0].clientX;
-      touchCurrentX = touchStartX;
-      touchStartTime = Date.now();
-      isDragging = true;
-      slides.style.transition = 'none';
-    } else {
-      // Multi-touch (pinch) - cancel swipe
-      isDragging = false;
-      slides.style.transition = '';
-      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-    }
-  }, { passive: true });
-
-  slides.addEventListener('touchmove', (e) => {
-    if (!isDragging || e.touches.length !== 1) {
-      isDragging = false;
-      return;
-    }
-    touchCurrentX = e.changedTouches[0].clientX;
-    const diff = touchCurrentX - touchStartX;
-    const offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
-    slides.style.transform = `translateX(${offset}%)`;
-  }, { passive: true });
-
-  slides.addEventListener('touchend', (e) => {
-    if (!isDragging) {
-      slides.style.transition = '';
-      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-      return;
-    }
-    isDragging = false;
-    slides.style.transition = '';
-    const diff = touchStartX - touchCurrentX;
-    const duration = Date.now() - touchStartTime;
-    const threshold = slides.offsetWidth * 0.2;
-
-    if (duration < 250 && Math.abs(diff) > 30) {
-      if (diff > 0) goToSlide(currentIndex + 1);
-      else goToSlide(currentIndex - 1);
-    } else if (Math.abs(diff) > threshold) {
-      if (diff > 0) goToSlide(currentIndex + 1);
-      else goToSlide(currentIndex - 1);
-    } else {
-      goToSlide(currentIndex);
-    }
-  });
-
-  // Mouse drag (desktop)
-  let mouseStartX = 0, mouseCurrentX = 0, isMouseDragging = false;
-
-  slides.addEventListener('mousedown', (e) => {
-    isMouseDragging = true;
-    mouseStartX = e.clientX;
-    mouseCurrentX = mouseStartX;
-    slides.style.transition = 'none';
-    e.preventDefault();
-  });
-
-  document.addEventListener('mousemove', (e) => {
-    if (!isMouseDragging) return;
-    mouseCurrentX = e.clientX;
-    const diff = mouseCurrentX - mouseStartX;
-    const offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
-    slides.style.transform = `translateX(${offset}%)`;
-  });
-
-  document.addEventListener('mouseup', (e) => {
-    if (!isMouseDragging) return;
-    isMouseDragging = false;
-    slides.style.transition = '';
-    const diff = mouseStartX - mouseCurrentX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) goToSlide(currentIndex + 1);
-      else goToSlide(currentIndex - 1);
-    } else {
-      goToSlide(currentIndex);
-    }
-  });
-
-  // Image load
-  document.querySelectorAll('.slide img').forEach(img => {
-    if (img.complete && img.naturalHeight > 0) {
-      img.classList.add('loaded');
-    } else {
-      img.addEventListener('load', () => img.classList.add('loaded'));
-    }
-  });
-
-  // Show pinch zoom hint on mobile (first time)
-  const isMobile = window.matchMedia('(max-width: 768px)').matches;
-  if (isMobile && !sessionStorage.getItem('zoomHintShown')) {
-    setTimeout(() => {
-      zoomHint.classList.add('show');
-      sessionStorage.setItem('zoomHintShown', '1');
-    }, 1500);
-  }
-
-  goToSlide(0);
+  goToSlideDesktop(0);
 </script>
 
 </body>
