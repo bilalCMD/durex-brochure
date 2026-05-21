@@ -49,13 +49,16 @@
     font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     background: var(--durex-blue);
-    overscroll-behavior: none;
   }
 
   body {
     background: linear-gradient(135deg, var(--durex-blue) 0%, var(--durex-blue-dark) 60%, var(--durex-blue-deep) 100%);
     color: var(--white);
+    display: flex;
+    flex-direction: column;
     position: relative;
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
   }
 
   body::before {
@@ -82,16 +85,7 @@
     z-index: 0;
   }
 
-  /* =============== DESKTOP =============== */
-  .desktop-view {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100%;
-    padding-top: var(--safe-top);
-    padding-bottom: var(--safe-bottom);
-  }
-
+  /* ============ HEADER ============ */
   .header {
     position: relative;
     z-index: 10;
@@ -106,6 +100,7 @@
     filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.4));
   }
 
+  /* ============ GALLERY ============ */
   .gallery-container {
     flex: 1;
     position: relative;
@@ -126,41 +121,53 @@
     aspect-ratio: 970 / 600;
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.08);
     background: rgba(0, 0, 0, 0.4);
   }
 
-  .slides-horizontal {
+  .slides {
     width: 100%;
     height: 100%;
     display: flex;
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
     cursor: grab;
   }
 
-  .slides-horizontal:active { cursor: grabbing; }
+  .slides:active {
+    cursor: grabbing;
+  }
 
-  .slide-h {
+  .slide {
     flex: 0 0 100%;
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    user-select: none;
     overflow: hidden;
   }
 
-  .slide-h img {
+  .slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease;
+    touch-action: pinch-zoom;
   }
 
-  .slide-h img.loaded { opacity: 1; }
+  .slide img.loaded {
+    opacity: 1;
+  }
 
+  /* ============ BOTTOM NAV ============ */
   .nav-bottom {
     position: relative;
     z-index: 10;
@@ -189,9 +196,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    color: var(--durex-blue);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
     transition: all 0.2s ease;
+    font-family: inherit;
     padding: 0;
+    flex-shrink: 0;
   }
 
   .arrow svg {
@@ -204,9 +216,20 @@
     stroke-linejoin: round;
   }
 
-  .arrow:hover { transform: scale(1.08); background: white; }
-  .arrow:active { transform: scale(0.92); }
-  .arrow:disabled { opacity: 0.35; cursor: not-allowed; }
+  .arrow:hover {
+    transform: scale(1.08);
+    background: white;
+  }
+
+  .arrow:active {
+    transform: scale(0.92);
+  }
+
+  .arrow:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 
   .counter {
     font-size: 14px;
@@ -219,6 +242,7 @@
     border: 1px solid rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     min-width: 80px;
     text-align: center;
     height: 48px;
@@ -227,8 +251,15 @@
     justify-content: center;
   }
 
-  .counter .current { font-weight: 900; font-size: 16px; }
-  .counter .total { opacity: 0.7; }
+  .counter .current {
+    color: var(--white);
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  .counter .total {
+    opacity: 0.7;
+  }
 
   .dots {
     display: flex;
@@ -244,7 +275,7 @@
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     border: none;
     padding: 0;
   }
@@ -253,180 +284,75 @@
     background: var(--white);
     width: 26px;
     border-radius: 4px;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
   }
 
-  /* =============== MOBILE - JS CONTROLLED VERTICAL =============== */
-  .mobile-view {
-    display: none;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    position: relative;
-    background: #000;
+  /* ============ MOBILE ============ */
+  @media (max-width: 768px) {
+    .header {
+      padding: 16px 16px 8px;
+    }
+    .header img {
+      height: 36px;
+    }
+    .gallery-container {
+      padding: 8px 12px;
+    }
+    .gallery {
+      border-radius: 14px;
+    }
+    .arrow {
+      width: 44px;
+      height: 44px;
+    }
+    .arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+    .nav-bottom {
+      padding: 14px 12px 20px;
+      gap: 12px;
+    }
+    .nav-controls {
+      gap: 14px;
+    }
+    .counter {
+      font-size: 13px;
+      padding: 10px 18px;
+      letter-spacing: 1px;
+      min-width: 70px;
+      height: 44px;
+    }
+    .counter .current {
+      font-size: 14px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+    }
+    .dot.active {
+      width: 20px;
+    }
   }
 
-  .v-track {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    will-change: transform;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  @media (max-width: 380px) {
+    .header img { height: 32px; }
+    .arrow {
+      width: 40px;
+      height: 40px;
+    }
+    .nav-controls {
+      gap: 10px;
+    }
+    .counter {
+      padding: 9px 14px;
+      min-width: 60px;
+      height: 40px;
+      font-size: 12px;
+    }
   }
 
-  .v-slide {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #000e88;
-  }
-
-  .v-slide img {
-    max-width: 100%;
-    max-height: 100%;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    touch-action: pinch-zoom;
-  }
-
-  /* Top header */
-  .m-top {
-    position: fixed;
-    top: calc(var(--safe-top) + 14px);
-    left: 16px;
-    right: 16px;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    pointer-events: none;
-  }
-
-  .m-top .logo-mini {
-    height: 28px;
-    width: auto;
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.7));
-  }
-
-  .m-top .count-pill {
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: 7px 16px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    color: white;
-  }
-
-  .m-top .count-pill .num-current {
-    font-weight: 900;
-    font-size: 14px;
-  }
-
-  .m-top .count-pill .num-total { opacity: 0.7; }
-
-  /* Vertical progress bar */
-  .v-progress {
-    position: fixed;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    pointer-events: none;
-  }
-
-  .v-pd {
-    width: 4px;
-    height: 22px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.3);
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .v-pd.active {
-    background: var(--white);
-    width: 5px;
-    height: 36px;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
-  }
-
-  .v-pd.passed {
-    background: rgba(255, 255, 255, 0.75);
-  }
-
-  /* Swipe hint */
-  .swipe-hint {
-    position: fixed;
-    bottom: calc(var(--safe-bottom) + 28px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(20px);
-    color: white;
-    padding: 11px 20px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    z-index: 100;
-    pointer-events: none;
-    opacity: 0;
-  }
-
-  .swipe-hint.show {
-    animation: hintShow 3s ease forwards;
-  }
-
-  .swipe-hint .ar-up {
-    display: inline-block;
-    animation: bouncy 1.2s ease-in-out infinite;
-    font-size: 14px;
-  }
-
-  @keyframes bouncy {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-  }
-
-  @keyframes hintShow {
-    0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
-    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
-    80% { opacity: 1; }
-    100% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
-  }
-
-  /* =============== BREAKPOINTS =============== */
-  @media (max-width: 768px) and (orientation: portrait) {
-    .desktop-view { display: none; }
-    .mobile-view { display: block; }
-  }
-
-  @media (max-width: 768px) and (orientation: landscape) {
-    .desktop-view { display: flex; }
-    .mobile-view { display: none; }
-    .header { padding: 8px 16px 4px; }
-    .header img { height: 28px; }
-    .gallery-container { padding: 4px 12px; }
-    .nav-bottom { padding: 8px 12px 12px; gap: 8px; }
-    .arrow { width: 38px; height: 38px; }
-    .counter { padding: 8px 16px; font-size: 11px; height: 38px; min-width: 60px; }
-  }
-
+  /* Tablets */
   @media (min-width: 769px) and (max-width: 1200px) {
     .header img { height: 50px; }
     .gallery { max-width: 800px; }
@@ -435,317 +361,77 @@
 </head>
 <body>
 
-<!-- ============ DESKTOP ============ -->
-<div class="desktop-view">
-  <div class="header">
-    <img src="Durex_logo.png" alt="Durex" />
-  </div>
+<div class="header">
+  <img src="Durex_logo.png" alt="Durex" />
+</div>
 
-  <div class="gallery-container">
-    <div class="gallery">
-      <div class="slides-horizontal" id="slidesH">
-        <div class="slide-h"><img src="slide-01.jpg" alt="Slide 1" loading="eager" /></div>
-        <div class="slide-h"><img src="slide-02.jpg" alt="Slide 2" loading="eager" /></div>
-        <div class="slide-h"><img src="slide-03.jpg" alt="Slide 3" loading="lazy" /></div>
-        <div class="slide-h"><img src="slide-04.jpg" alt="Slide 4" loading="lazy" /></div>
-        <div class="slide-h"><img src="slide-05.jpg" alt="Slide 5" loading="lazy" /></div>
-        <div class="slide-h"><img src="slide-06.jpg" alt="Slide 6" loading="lazy" /></div>
-        <div class="slide-h"><img src="slide-07.jpg" alt="Slide 7" loading="lazy" /></div>
-        <div class="slide-h"><img src="slide-08.jpg" alt="Slide 8" loading="lazy" /></div>
-        <div class="slide-h"><img src="slide-09.jpg" alt="Slide 9" loading="lazy" /></div>
-        <div class="slide-h"><img src="slide-10.jpg" alt="Slide 10" loading="lazy" /></div>
-      </div>
+<div class="gallery-container">
+  <div class="gallery">
+    <div class="slides" id="slides">
+      <div class="slide"><img src="slide-01.jpg" alt="Durex Slide 1" loading="eager" /></div>
+      <div class="slide"><img src="slide-02.jpg" alt="Durex Slide 2" loading="eager" /></div>
+      <div class="slide"><img src="slide-03.jpg" alt="Durex Slide 3" loading="lazy" /></div>
+      <div class="slide"><img src="slide-04.jpg" alt="Durex Slide 4" loading="lazy" /></div>
+      <div class="slide"><img src="slide-05.jpg" alt="Durex Slide 5" loading="lazy" /></div>
+      <div class="slide"><img src="slide-06.jpg" alt="Durex Slide 6" loading="lazy" /></div>
+      <div class="slide"><img src="slide-07.jpg" alt="Durex Slide 7" loading="lazy" /></div>
+      <div class="slide"><img src="slide-08.jpg" alt="Durex Slide 8" loading="lazy" /></div>
+      <div class="slide"><img src="slide-09.jpg" alt="Durex Slide 9" loading="lazy" /></div>
+      <div class="slide"><img src="slide-10.jpg" alt="Durex Slide 10" loading="lazy" /></div>
     </div>
-  </div>
-
-  <div class="nav-bottom">
-    <div class="nav-controls">
-      <button class="arrow prev" id="prevBtn" aria-label="Previous">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-      <div class="counter">
-        <span class="current" id="currentSlide">1</span><span class="total"> / <span id="totalSlides">10</span></span>
-      </div>
-      <button class="arrow next" id="nextBtn" aria-label="Next">
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </button>
-    </div>
-    <div class="dots" id="dots"></div>
   </div>
 </div>
 
-<!-- ============ MOBILE - JS CONTROLLED ============ -->
-<div class="mobile-view">
-
-  <div class="m-top">
-    <img src="Durex_logo.png" alt="Durex" class="logo-mini" />
-    <div class="count-pill">
-      <span class="num-current" id="mobileCurrent">1</span><span class="num-total"> / <span id="mobileTotal">10</span></span>
+<div class="nav-bottom">
+  <div class="nav-controls">
+    <button class="arrow prev" id="prevBtn" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <div class="counter">
+      <span class="current" id="currentSlide">1</span><span class="total"> / <span id="totalSlides">10</span></span>
     </div>
+    <button class="arrow next" id="nextBtn" aria-label="Next">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
   </div>
-
-  <div class="v-track" id="vTrack">
-    <div class="v-slide" data-index="0" style="top: 0"><img src="slide-01.jpg" alt="Slide 1" loading="eager" /></div>
-    <div class="v-slide" data-index="1" style="top: 100vh"><img src="slide-02.jpg" alt="Slide 2" loading="eager" /></div>
-    <div class="v-slide" data-index="2" style="top: 200vh"><img src="slide-03.jpg" alt="Slide 3" loading="lazy" /></div>
-    <div class="v-slide" data-index="3" style="top: 300vh"><img src="slide-04.jpg" alt="Slide 4" loading="lazy" /></div>
-    <div class="v-slide" data-index="4" style="top: 400vh"><img src="slide-05.jpg" alt="Slide 5" loading="lazy" /></div>
-    <div class="v-slide" data-index="5" style="top: 500vh"><img src="slide-06.jpg" alt="Slide 6" loading="lazy" /></div>
-    <div class="v-slide" data-index="6" style="top: 600vh"><img src="slide-07.jpg" alt="Slide 7" loading="lazy" /></div>
-    <div class="v-slide" data-index="7" style="top: 700vh"><img src="slide-08.jpg" alt="Slide 8" loading="lazy" /></div>
-    <div class="v-slide" data-index="8" style="top: 800vh"><img src="slide-09.jpg" alt="Slide 9" loading="lazy" /></div>
-    <div class="v-slide" data-index="9" style="top: 900vh"><img src="slide-10.jpg" alt="Slide 10" loading="lazy" /></div>
-  </div>
-
-  <div class="v-progress" id="vProgress"></div>
-
-  <div class="swipe-hint" id="swipeHint">
-    <span class="ar-up">↑</span>
-    <span>Swipe up</span>
-  </div>
-
+  <div class="dots" id="dots"></div>
 </div>
 
 <script>
-  const TOTAL = 10;
-
-  // ============ DESKTOP ============
-  const slidesH = document.getElementById('slidesH');
+  const slides = document.getElementById('slides');
+  const totalSlides = document.querySelectorAll('.slide').length;
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const currentSlideEl = document.getElementById('currentSlide');
   const totalSlidesEl = document.getElementById('totalSlides');
   const dotsContainer = document.getElementById('dots');
 
-  let dIndex = 0;
-  totalSlidesEl.textContent = TOTAL;
+  let currentIndex = 0;
+  totalSlidesEl.textContent = totalSlides;
 
-  for (let i = 0; i < TOTAL; i++) {
+  // Create dots
+  for (let i = 0; i < totalSlides; i++) {
     const dot = document.createElement('button');
     dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', () => goDesktop(i));
+    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+    dot.addEventListener('click', () => goToSlide(i));
     dotsContainer.appendChild(dot);
   }
 
-  function goDesktop(index) {
+  function goToSlide(index) {
     if (index < 0) index = 0;
-    if (index >= TOTAL) index = TOTAL - 1;
-    dIndex = index;
-    slidesH.style.transform = `translateX(-${index * 100}%)`;
+    if (index >= totalSlides) index = totalSlides - 1;
+    currentIndex = index;
+    slides.style.transform = `translateX(-${index * 100}%)`;
     currentSlideEl.textContent = index + 1;
     document.querySelectorAll('.dot').forEach((d, i) => {
       d.classList.toggle('active', i === index);
     });
     prevBtn.disabled = index === 0;
-    nextBtn.disabled = index === TOTAL - 1;
-    trackSlide(index);
-  }
+    nextBtn.disabled = index === totalSlides - 1;
 
-  prevBtn.addEventListener('click', () => goDesktop(dIndex - 1));
-  nextBtn.addEventListener('click', () => goDesktop(dIndex + 1));
+    if (navigator.vibrate) navigator.vibrate(10);
 
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goDesktop(dIndex - 1);
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goDesktop(dIndex + 1);
-  });
-
-  // Desktop drag (horizontal)
-  let mStartX = 0, mCurX = 0, mDrag = false;
-  slidesH.addEventListener('mousedown', (e) => {
-    mDrag = true; mStartX = e.clientX; mCurX = mStartX;
-    slidesH.style.transition = 'none';
-    e.preventDefault();
-  });
-  document.addEventListener('mousemove', (e) => {
-    if (!mDrag) return;
-    mCurX = e.clientX;
-    const diff = mCurX - mStartX;
-    const offset = -(dIndex * 100) + (diff / slidesH.offsetWidth) * 100;
-    slidesH.style.transform = `translateX(${offset}%)`;
-  });
-  document.addEventListener('mouseup', () => {
-    if (!mDrag) return;
-    mDrag = false;
-    slidesH.style.transition = '';
-    const diff = mStartX - mCurX;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) goDesktop(dIndex + 1);
-      else goDesktop(dIndex - 1);
-    } else {
-      goDesktop(dIndex);
-    }
-  });
-
-  // ============ MOBILE - JS CONTROLLED VERTICAL ============
-  const vTrack = document.getElementById('vTrack');
-  const mobileCurrent = document.getElementById('mobileCurrent');
-  const mobileTotal = document.getElementById('mobileTotal');
-  const vProgress = document.getElementById('vProgress');
-  const swipeHint = document.getElementById('swipeHint');
-
-  mobileTotal.textContent = TOTAL;
-
-  // Create vertical progress dots
-  for (let i = 0; i < TOTAL; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'v-pd' + (i === 0 ? ' active' : '');
-    vProgress.appendChild(dot);
-  }
-
-  let mIndex = 0;
-  let viewportHeight = window.innerHeight;
-
-  function goMobile(index) {
-    if (index < 0) index = 0;
-    if (index >= TOTAL) index = TOTAL - 1;
-    mIndex = index;
-
-    vTrack.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-    vTrack.style.transform = `translateY(-${index * viewportHeight}px)`;
-
-    mobileCurrent.textContent = index + 1;
-
-    document.querySelectorAll('.v-pd').forEach((d, i) => {
-      d.classList.remove('active', 'passed');
-      if (i < index) d.classList.add('passed');
-      else if (i === index) d.classList.add('active');
-    });
-
-    if (navigator.vibrate) navigator.vibrate(8);
-    trackSlide(index);
-  }
-
-  // ============ TOUCH HANDLING ============
-  let touchStartY = 0;
-  let touchStartX = 0;
-  let touchCurrentY = 0;
-  let touchStartTime = 0;
-  let isVerticalSwipe = false;
-  let isDragging = false;
-  let activeFingers = 0;
-
-  vTrack.addEventListener('touchstart', (e) => {
-    activeFingers = e.touches.length;
-    if (e.touches.length === 1) {
-      touchStartY = e.touches[0].clientY;
-      touchStartX = e.touches[0].clientX;
-      touchCurrentY = touchStartY;
-      touchStartTime = Date.now();
-      isVerticalSwipe = false;
-      isDragging = true;
-      vTrack.style.transition = 'none';
-    } else {
-      // Multi-touch (pinch) - cancel swipe
-      isDragging = false;
-    }
-  }, { passive: true });
-
-  vTrack.addEventListener('touchmove', (e) => {
-    if (!isDragging || e.touches.length !== 1) {
-      isDragging = false;
-      return;
-    }
-
-    touchCurrentY = e.touches[0].clientY;
-    const touchCurrentX = e.touches[0].clientX;
-    const diffY = touchCurrentY - touchStartY;
-    const diffX = touchCurrentX - touchStartX;
-
-    // Detect if swipe is more vertical than horizontal
-    if (!isVerticalSwipe) {
-      if (Math.abs(diffY) > 10 || Math.abs(diffX) > 10) {
-        isVerticalSwipe = Math.abs(diffY) > Math.abs(diffX);
-      }
-    }
-
-    if (isVerticalSwipe) {
-      // Apply translate during drag
-      let offset = -(mIndex * viewportHeight) + diffY;
-
-      // Rubber band at edges
-      if (mIndex === 0 && diffY > 0) {
-        offset = -(mIndex * viewportHeight) + diffY * 0.3;
-      }
-      if (mIndex === TOTAL - 1 && diffY < 0) {
-        offset = -(mIndex * viewportHeight) + diffY * 0.3;
-      }
-
-      vTrack.style.transform = `translateY(${offset}px)`;
-    }
-  }, { passive: true });
-
-  vTrack.addEventListener('touchend', () => {
-    if (!isDragging) {
-      vTrack.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-      vTrack.style.transform = `translateY(-${mIndex * viewportHeight}px)`;
-      return;
-    }
-    isDragging = false;
-
-    if (!isVerticalSwipe) {
-      // Not a vertical swipe, snap back
-      vTrack.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-      vTrack.style.transform = `translateY(-${mIndex * viewportHeight}px)`;
-      return;
-    }
-
-    const diffY = touchStartY - touchCurrentY;  // positive = swipe up
-    const duration = Date.now() - touchStartTime;
-    const threshold = viewportHeight * 0.15;  // 15% of screen
-    const velocityThreshold = 0.3; // pixels per ms
-    const velocity = Math.abs(diffY) / duration;
-
-    // Fast flick or big drag
-    if ((duration < 300 && Math.abs(diffY) > 30) || velocity > velocityThreshold || Math.abs(diffY) > threshold) {
-      if (diffY > 0) {
-        goMobile(mIndex + 1);
-      } else {
-        goMobile(mIndex - 1);
-      }
-    } else {
-      // Snap back to current
-      goMobile(mIndex);
-    }
-  });
-
-  // Handle window resize / orientation change
-  window.addEventListener('resize', () => {
-    viewportHeight = window.innerHeight;
-    vTrack.style.transition = 'none';
-    vTrack.style.transform = `translateY(-${mIndex * viewportHeight}px)`;
-    // Update slide positions
-    document.querySelectorAll('.v-slide').forEach((slide, i) => {
-      slide.style.top = (i * viewportHeight) + 'px';
-      slide.style.height = viewportHeight + 'px';
-    });
-  });
-
-  // Wheel/scroll support on mobile (touchpad / mouse wheel)
-  let wheelTimeout;
-  let wheelLocked = false;
-
-  vTrack.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    if (wheelLocked) return;
-
-    wheelLocked = true;
-    if (e.deltaY > 0) goMobile(mIndex + 1);
-    else goMobile(mIndex - 1);
-
-    setTimeout(() => { wheelLocked = false; }, 500);
-  }, { passive: false });
-
-  // Show swipe up hint first time
-  const isMobile = window.matchMedia('(max-width: 768px) and (orientation: portrait)').matches;
-  if (isMobile && !sessionStorage.getItem('mobileHintShown')) {
-    setTimeout(() => {
-      swipeHint.classList.add('show');
-      sessionStorage.setItem('mobileHintShown', '1');
-    }, 1500);
-  }
-
-  // ============ ANALYTICS ============
-  function trackSlide(index) {
     if (typeof gtag !== 'undefined') {
       gtag('event', 'slide_view', {
         'event_category': 'Brochure',
@@ -755,22 +441,108 @@
     }
   }
 
-  // Image fade-in
-  document.querySelectorAll('img').forEach(img => {
-    if (img.complete && img.naturalHeight > 0) img.classList.add('loaded');
-    else img.addEventListener('load', () => img.classList.add('loaded'));
+  prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+  nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
+    if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
   });
 
-  // Initialize
-  goDesktop(0);
+  // Touch/swipe (horizontal) - single finger only so pinch zoom works
+  let touchStartX = 0, touchCurrentX = 0, touchStartTime = 0;
+  let isDragging = false;
 
-  // Set initial slide positions properly
-  setTimeout(() => {
-    document.querySelectorAll('.v-slide').forEach((slide, i) => {
-      slide.style.top = (i * viewportHeight) + 'px';
-      slide.style.height = viewportHeight + 'px';
-    });
-  }, 50);
+  slides.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      touchStartX = e.changedTouches[0].clientX;
+      touchCurrentX = touchStartX;
+      touchStartTime = Date.now();
+      isDragging = true;
+      slides.style.transition = 'none';
+    } else {
+      isDragging = false;
+      slides.style.transition = '';
+      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+  }, { passive: true });
+
+  slides.addEventListener('touchmove', (e) => {
+    if (!isDragging || e.touches.length !== 1) {
+      isDragging = false;
+      return;
+    }
+    touchCurrentX = e.changedTouches[0].clientX;
+    const diff = touchCurrentX - touchStartX;
+    const offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
+    slides.style.transform = `translateX(${offset}%)`;
+  }, { passive: true });
+
+  slides.addEventListener('touchend', () => {
+    if (!isDragging) {
+      slides.style.transition = '';
+      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+      return;
+    }
+    isDragging = false;
+    slides.style.transition = '';
+    const diff = touchStartX - touchCurrentX;
+    const duration = Date.now() - touchStartTime;
+    const threshold = slides.offsetWidth * 0.2;
+
+    if (duration < 250 && Math.abs(diff) > 30) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    } else if (Math.abs(diff) > threshold) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    } else {
+      goToSlide(currentIndex);
+    }
+  });
+
+  // Mouse drag (desktop)
+  let mouseStartX = 0, mouseCurrentX = 0, isMouseDragging = false;
+
+  slides.addEventListener('mousedown', (e) => {
+    isMouseDragging = true;
+    mouseStartX = e.clientX;
+    mouseCurrentX = mouseStartX;
+    slides.style.transition = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isMouseDragging) return;
+    mouseCurrentX = e.clientX;
+    const diff = mouseCurrentX - mouseStartX;
+    const offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
+    slides.style.transform = `translateX(${offset}%)`;
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!isMouseDragging) return;
+    isMouseDragging = false;
+    slides.style.transition = '';
+    const diff = mouseStartX - mouseCurrentX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToSlide(currentIndex + 1);
+      else goToSlide(currentIndex - 1);
+    } else {
+      goToSlide(currentIndex);
+    }
+  });
+
+  // Image load
+  document.querySelectorAll('.slide img').forEach(img => {
+    if (img.complete && img.naturalHeight > 0) {
+      img.classList.add('loaded');
+    } else {
+      img.addEventListener('load', () => img.classList.add('loaded'));
+    }
+  });
+
+  goToSlide(0);
 </script>
 
 </body>
