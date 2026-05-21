@@ -134,6 +134,7 @@
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
     cursor: grab;
+    touch-action: pan-y;
   }
 
   .slides:active {
@@ -160,7 +161,6 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.4s ease;
-    touch-action: pinch-zoom;
   }
 
   .slide img.loaded {
@@ -290,7 +290,7 @@
   /* ============ MOBILE ============ */
   @media (max-width: 768px) {
     .header {
-      padding: 30px 16px 8px;
+      padding: 45px 16px 8px;
     }
     .header img {
       height: 36px;
@@ -449,45 +449,35 @@
     if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
   });
 
-  // Touch/swipe (horizontal) - single finger only so pinch zoom works
+  // Touch/swipe (horizontal) - buttery smooth thumb feel
   let touchStartX = 0, touchCurrentX = 0, touchStartTime = 0;
   let touchStartY = 0;
   let isDragging = false;
   let isHorizontal = null;
 
   slides.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 1) {
-      touchStartX = e.changedTouches[0].clientX;
-      touchStartY = e.changedTouches[0].clientY;
-      touchCurrentX = touchStartX;
-      touchStartTime = Date.now();
-      isDragging = true;
-      isHorizontal = null;
-      slides.style.transition = 'none';
-    } else {
-      isDragging = false;
-      slides.style.transition = '';
-      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
-    }
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchCurrentX = touchStartX;
+    touchStartTime = Date.now();
+    isDragging = true;
+    isHorizontal = null;
+    slides.style.transition = 'none';
   }, { passive: true });
 
   slides.addEventListener('touchmove', (e) => {
-    if (!isDragging || e.touches.length !== 1) {
-      isDragging = false;
-      return;
-    }
-    touchCurrentX = e.changedTouches[0].clientX;
-    const touchCurrentY = e.changedTouches[0].clientY;
+    if (!isDragging) return;
+    touchCurrentX = e.touches[0].clientX;
+    const touchCurrentY = e.touches[0].clientY;
     const diff = touchCurrentX - touchStartX;
     const diffY = touchCurrentY - touchStartY;
 
-    // Decide swipe direction once (so vertical page scroll feels natural too)
-    if (isHorizontal === null && (Math.abs(diff) > 6 || Math.abs(diffY) > 6)) {
+    // Decide direction quickly (small 4px movement)
+    if (isHorizontal === null && (Math.abs(diff) > 4 || Math.abs(diffY) > 4)) {
       isHorizontal = Math.abs(diff) >= Math.abs(diffY);
     }
 
     if (isHorizontal) {
-      // Follow finger 1:1 for smooth feel
       let offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
       // Soft rubber-band at edges
       if ((currentIndex === 0 && diff > 0) || (currentIndex === totalSlides - 1 && diff < 0)) {
@@ -513,10 +503,10 @@
 
     const diff = touchStartX - touchCurrentX;
     const duration = Date.now() - touchStartTime;
-    const velocity = Math.abs(diff) / Math.max(duration, 1); // px per ms
-    // Light thresholds = easy thumb flicks register
-    const distanceThreshold = slides.offsetWidth * 0.12;
-    const velocityThreshold = 0.25;
+    const velocity = Math.abs(diff) / Math.max(duration, 1);
+    // Very light = easy thumb swipe
+    const distanceThreshold = slides.offsetWidth * 0.08;
+    const velocityThreshold = 0.15;
 
     if (Math.abs(diff) > distanceThreshold || velocity > velocityThreshold) {
       if (diff > 0) goToSlide(currentIndex + 1);
