@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#000E88" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -555,6 +555,21 @@
     } else {
       img.addEventListener('load', () => img.classList.add('loaded'));
     }
+  });
+
+  // Prevent double-tap zoom on mobile
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      e.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+
+  // Prevent double-tap zoom via gesture
+  document.addEventListener('gesturestart', (e) => {
+    e.preventDefault();
   });
 
   goToSlide(0);
