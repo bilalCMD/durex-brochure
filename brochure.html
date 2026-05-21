@@ -290,7 +290,7 @@
   /* ============ MOBILE ============ */
   @media (max-width: 768px) {
     .header {
-      padding: 16px 16px 8px;
+      padding: 30px 16px 8px;
     }
     .header img {
       height: 36px;
@@ -451,14 +451,18 @@
 
   // Touch/swipe (horizontal) - single finger only so pinch zoom works
   let touchStartX = 0, touchCurrentX = 0, touchStartTime = 0;
+  let touchStartY = 0;
   let isDragging = false;
+  let isHorizontal = null;
 
   slides.addEventListener('touchstart', (e) => {
     if (e.touches.length === 1) {
       touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
       touchCurrentX = touchStartX;
       touchStartTime = Date.now();
       isDragging = true;
+      isHorizontal = null;
       slides.style.transition = 'none';
     } else {
       isDragging = false;
@@ -473,9 +477,24 @@
       return;
     }
     touchCurrentX = e.changedTouches[0].clientX;
+    const touchCurrentY = e.changedTouches[0].clientY;
     const diff = touchCurrentX - touchStartX;
-    const offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
-    slides.style.transform = `translateX(${offset}%)`;
+    const diffY = touchCurrentY - touchStartY;
+
+    // Decide swipe direction once (so vertical page scroll feels natural too)
+    if (isHorizontal === null && (Math.abs(diff) > 6 || Math.abs(diffY) > 6)) {
+      isHorizontal = Math.abs(diff) >= Math.abs(diffY);
+    }
+
+    if (isHorizontal) {
+      // Follow finger 1:1 for smooth feel
+      let offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100;
+      // Soft rubber-band at edges
+      if ((currentIndex === 0 && diff > 0) || (currentIndex === totalSlides - 1 && diff < 0)) {
+        offset = -(currentIndex * 100) + (diff / slides.offsetWidth) * 100 * 0.35;
+      }
+      slides.style.transform = `translateX(${offset}%)`;
+    }
   }, { passive: true });
 
   slides.addEventListener('touchend', () => {
@@ -486,14 +505,20 @@
     }
     isDragging = false;
     slides.style.transition = '';
+
+    if (!isHorizontal) {
+      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+      return;
+    }
+
     const diff = touchStartX - touchCurrentX;
     const duration = Date.now() - touchStartTime;
-    const threshold = slides.offsetWidth * 0.2;
+    const velocity = Math.abs(diff) / Math.max(duration, 1); // px per ms
+    // Light thresholds = easy thumb flicks register
+    const distanceThreshold = slides.offsetWidth * 0.12;
+    const velocityThreshold = 0.25;
 
-    if (duration < 250 && Math.abs(diff) > 30) {
-      if (diff > 0) goToSlide(currentIndex + 1);
-      else goToSlide(currentIndex - 1);
-    } else if (Math.abs(diff) > threshold) {
+    if (Math.abs(diff) > distanceThreshold || velocity > velocityThreshold) {
       if (diff > 0) goToSlide(currentIndex + 1);
       else goToSlide(currentIndex - 1);
     } else {
