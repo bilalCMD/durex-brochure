@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#000E88" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -134,7 +134,7 @@
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform;
     cursor: grab;
-    touch-action: pan-y;
+    touch-action: pan-y pinch-zoom;
   }
 
   .slides:active {
@@ -456,6 +456,13 @@
   let isHorizontal = null;
 
   slides.addEventListener('touchstart', (e) => {
+    // Multi-finger = pinch zoom, don't treat as swipe
+    if (e.touches.length > 1) {
+      isDragging = false;
+      slides.style.transition = '';
+      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+      return;
+    }
     touchStartX = e.touches[0].clientX;
     touchStartY = e.touches[0].clientY;
     touchCurrentX = touchStartX;
@@ -467,6 +474,13 @@
 
   slides.addEventListener('touchmove', (e) => {
     if (!isDragging) return;
+    // If second finger lands (pinch), cancel swipe
+    if (e.touches.length > 1) {
+      isDragging = false;
+      slides.style.transition = '';
+      slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+      return;
+    }
     touchCurrentX = e.touches[0].clientX;
     const touchCurrentY = e.touches[0].clientY;
     const diff = touchCurrentX - touchStartX;
@@ -555,21 +569,6 @@
     } else {
       img.addEventListener('load', () => img.classList.add('loaded'));
     }
-  });
-
-  // Prevent double-tap zoom on mobile
-  let lastTouchEnd = 0;
-  document.addEventListener('touchend', (e) => {
-    const now = Date.now();
-    if (now - lastTouchEnd <= 300) {
-      e.preventDefault();
-    }
-    lastTouchEnd = now;
-  }, { passive: false });
-
-  // Prevent double-tap zoom via gesture
-  document.addEventListener('gesturestart', (e) => {
-    e.preventDefault();
   });
 
   goToSlide(0);
